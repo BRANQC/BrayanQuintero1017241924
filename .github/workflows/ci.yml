@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Construir, probar y ejecutar la aplicación
+    name: Construir, validar, probar y ejecutar la aplicación
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,11 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Ejecutar las pruebas unitarias
-        run: pytest
+      - name: Análisis estático del código con flake8
+        run: flake8 . --count --statistics
+
+      - name: Ejecutar las pruebas unitarias con cobertura
+        run: pytest --cov=. --cov-report=term-missing
 
       - name: Ejecutar la aplicación
         run: python main.py
